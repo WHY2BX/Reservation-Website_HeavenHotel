@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block page_title %} Payment Confirm {% endblock %}
+    <style>
+        .user-button {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            border-radius: 20px;
+            padding: 5px 15px;
+        }
+
+        .qr-code {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 150px;
+            max-height: 150px;
+            margin: 0 auto;
+        }
+
+        .confirm-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-size: 1.2rem;
+        }
+
+    </style>
+</head>
+{% block content%}
+
+<body>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div class="qr-code mb-2 mt-3">
+                    <img src="{% static 'qrcode.png' %}" alt="Payment QR Code" class="img-thumbnail" style="width: 300px; height: 300px;">
+                </div> 
+                <div class="mb-3 mt-3">
+                    <h3 style="color:  white;" >
+                        Price : {{booking.total_price}}
+                    </h3>
+                </div>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-light mb-2" style="color: black;"> Confirm Payment </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+</html>

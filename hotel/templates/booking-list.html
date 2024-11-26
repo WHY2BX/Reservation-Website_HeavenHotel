@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} AllBookingsPage {% endblock %}
+
+{% block page_header %}
+<div class="mt-5">
+    {% if user.is_staff %}
+    <h1 class="text-center" style="color: white;"> All Bookings List</h1>
+    {% else%}
+    <h1 class="text-center" style="color: white;"> Your Bookings History</h1>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if book %}
+<div class="row row-cols-1 row-cols-md-2 g-4 m-2">
+
+    {% for book in book %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img 
+                        src="{% if 'Eco' in book.room.room_types.all|join:',' and 'Single Room' in book.room.room_types.all|join:',' %}{% static 'single_eco.png' %}
+                        {% elif 'Eco' in book.room.room_types.all|join:',' and 'Double Room' in book.room.room_types.all|join:',' %}{% static 'double_eco.png' %}
+                        {% elif 'Deluxe' in book.room.room_types.all|join:',' and 'Single Room' in book.room.room_types.all|join:',' %}{% static 'single_deluxe.png' %}
+                        {% elif 'Deluxe' in book.room.room_types.all|join:',' and 'Double Room' in book.room.room_types.all|join:',' %}{% static 'double_deluxe.png' %}
+                        {% endif %}"
+                        class="img-fluid rounded-start h-100 object-fit-cover"
+                        style="width: auto; height: 100px;"
+                        alt="{{ room.name }}"
+                        >
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body d-flex flex-column justify-content-between ">
+                        <!-- name -->
+                        {% if user.is_staff %}
+                        <h3>{{book.user.first_name}} {{book.user.last_name}}</h3>
+                        <div>
+                            <b>Name: </b>{{book.room.name}}
+                        </div>
+                        <div>
+                            <b>Type: </b>{{ book.room.room_types.all|join:", " }}
+                        </div>
+                        <!-- Price -->
+                        <div><b>Price: </b>{{book.total_price}}</div>
+                        <div><b> Promotion: </b>
+                            {% if book.promotion != None%}
+                                {{book.promotion.name}}
+                            {% else %}
+                                No promotion apply
+                            {% endif %}
+                        </div>
+
+
+                        {% else %}
+                        <h3>{{book.room.name}}</h3>
+
+                        <div class="mb-2">
+                            <!-- Type -->
+                            <div>
+                                <b>Type: </b>{{ book.room.room_types.all|join:", " }}
+                            </div>
+                            <!-- Price -->
+                            <div><b>Price: </b>{{book.total_price}}</div>
+                            <!-- Promotion -->
+                            <div><b> Promotion: </b>
+                                {% if book.promotion != None%}
+                                    {{book.promotion.name}}
+                                {% else %}
+                                    No promotion apply
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-auto d-flex justify-content-end align-items-center">
+                            <!-- กำหนด path ให้ถูกต้อง -->
+                            {% if user.is_staff %}
+
+                            <button type="button" class="btn btn-dark me-2"
+                                onclick="window.location.href='{% url 'editBooking' book.id %}'">
+                                Edit
+                            </button>
+
+                            <button type="submit" onclick="deleteBooking({{book.id}}, '{{csrf_token}}')"
+                                class="btn btn-danger me-2"> Delete </button>
+
+                            {% else %}
+                            {% if book.payment_status %}
+                            <!-- Payment Complete ด้านซ้าย -->
+                            <b style="color: green;" class="payment-complete me-auto"> Payment Complete </b>
+                            <!-- ปุ่ม Cancel ทางขวา -->
+                            <button type="submit" onclick="deleteBooking({{book.id}}, '{{csrf_token}}')"
+                                class="btn btn-danger"> Cancel </button>
+                            {% else %}
+                            <!-- Payment และ Cancel อยู่ติดกันทางขวา -->
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-dark me-2">
+                                    <a href="{% url 'payment' book.id %}" class="booking-btn"
+                                        style="text-decoration: none; color:antiquewhite">Payment</a>
+                                </button>
+                                <button type="submit" onclick="deleteBooking({{book.id}}, '{{csrf_token}}')"
+                                    class="btn btn-danger"> Cancel </button>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="alert text-center">
+    <p style="color: white;">No booking history to show.</p>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'room.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} manageRoomPage {% endblock %}
+
+{% block page_header %}
+<div class="mt-5">
+    <h1 class="text-center" style="color: white;"> Manage Room </h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center m-3">
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'createRoom' %}'">
+        Add Room
+    </button>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 g-4 m-2">
+    {% for room in room %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% if 'Eco' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_eco.png' %}
+                        {% elif 'Eco' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_eco.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_deluxe.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_deluxe.png' %}
+                        {% endif %}" class="img-fluid rounded-start h-100 object-fit-cover"
+                        style="width: auto; height: 100px;" alt="{{ room.name }}">
+                </div>
+                <div class="col-md-8">
+                    <!-- card-body -->
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ room.name }}</h5>
+                            <p class="card-text"><b>Type:</b>
+                                {{ room.room_types.all|join:", " }}
+                            </p>
+
+                            <p class="card-text"><b>Price:</b> {{ room.price }}</p>
+                        </div>
+
+                        <div class="mt-auto d-flex justify-content-end">
+                            <button type="button" class="btn btn-dark me-2"
+                                onclick="window.location.href='{% url 'editRoom' room.id %}'">
+                                Edit
+                            </button>
+
+                            <button type="submit" onclick="deleteRoom({{room.id}}, '{{csrf_token}}')"
+                                class="btn btn-danger me-2"> Delete </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'room.js' %}"></script>
+{% endblock %}

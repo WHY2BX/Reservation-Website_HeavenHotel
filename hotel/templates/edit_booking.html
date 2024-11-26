@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} Edit Booking {% endblock %}]
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+    <div class="editbooking-container m-5">
+        <!-- <i class="fa-solid fa-couch"></i> -->
+        
+        <div class="mb-2"> 
+            <h1 class="text-center" style="color: white;">Edit Booking</h1>
+            <b style="color: white;">Booked by : {{booking.user.first_name}} {{booking.user.last_name}}</b>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-light" style="color: black;"> Save </button>
+        </form>       
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

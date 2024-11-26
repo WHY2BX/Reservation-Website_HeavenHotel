@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title%} createroom {% endblock %}
+
+{% block page_header%}
+<div class="d-flex justify-content-center align-items-center mt-5">
+<h1 class="text-center" style="color: white;"> Add new Promotion </h1>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+  <div class="createroom-container">
+
+    <form class="createroom-form" method="post">
+      {% csrf_token %}
+      <!-- เรียกใช้ form -->
+      {{ form.as_p }} 
+      <button type="submit" class="btn btn-light mb-5" style="color: black;">Create</button>
+    </form>
+
+  </div>
+</div>
+</div>
+
+{% endblock %}

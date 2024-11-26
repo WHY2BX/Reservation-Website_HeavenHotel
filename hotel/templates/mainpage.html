@@ -1,0 +1,162 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} Mainpage {% endblock %}
+
+{% block content %}
+<div class="mt-5">
+    <h1 class="text-center m-3" style="color: white;">Welcome to Heaven Hotel</h1>
+    <h4 class="text-center" style="color: white;">Choose the room you want !</h4>
+</div>
+
+<div class="row justify-content-center my-4">
+    <div class="col-md-6">
+        <!-- Search Bar -->
+        <form class="d-flex search-bar" method="post" action="{% url 'search'%}">
+            {% csrf_token %}
+
+            <input class="form-control border-1" type="text" placeholder="Search rooms..." name="searched">
+            <button class="btn btn-dark" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+    <!-- ถ้าไม่มี ให้แสดงขอความว่าไม่มีห้อง-->
+    {% if messages %}
+    <div class="alert alert-warning" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- แสดงผลลัพธ์การค้นหา ถ้ามันมี -->
+{% if searched %}
+<div class="row row-cols-1 row-cols-md-2 g-4 m-2">
+    {% for room in searched %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% if 'Eco' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_eco.png' %}
+                        {% elif 'Eco' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_eco.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_deluxe.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_deluxe.png' %}
+                        {% endif %}" class="img-fluid rounded-start h-100 object-fit-cover"
+                        style="width: auto; height: 100px;" alt="{{ room.name }}">
+                </div>
+                <div class="col-md-8">
+                    <!-- card-body -->
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ room.name }}</h5>
+                            <div>
+                                <b>Type:</b> {{ room.room_types.all|join:", " }}
+                            </div>
+                            <div>
+                                <b>Price:</b> {{ room.price }}
+                            </div>
+                        </div>
+                        <div class="mt-auto d-flex justify-content-end">
+                            <a href="{% url 'booking' room.id %}" class="btn btn-dark book-btn">Book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- แสดงห้องทั้งหมดที่มี -->
+{% else %}
+<div class="row row-cols-1 row-cols-md-2 g-4 m-2">
+    {% for room in room %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% if 'Eco' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_eco.png' %}
+                        {% elif 'Eco' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_eco.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Single Room' in room.room_types.all|join:',' %}{% static 'single_deluxe.png' %}
+                        {% elif 'Deluxe' in room.room_types.all|join:',' and 'Double Room' in room.room_types.all|join:',' %}{% static 'double_deluxe.png' %}
+                        {% endif %}" class="img-fluid rounded-start h-100 object-fit-cover"
+                        style="width: auto; height: 100px;" alt="{{ room.name }}">
+                </div>
+                <div class="col-md-8">
+                    <!-- card-body -->
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ room.name }}</h5>
+                            <p class="card-text">
+                                Type: {{ room.room_types.all|join:", " }}
+
+                            </p>
+                            <p class="card-text">Price: {{ room.price }}</p>
+                        </div>
+                        <!-- ปรับให้ปุ่มมีคลาส book-btn ด้วย -->
+                        <div class="mt-auto d-flex justify-content-end">
+                            <a href="{% url 'booking' room.id %}" class="btn btn-dark book-btn">Book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+<style>
+    html,
+    body {
+        background-color: #1a1a1a !important;
+        color: white;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        background-color: #2a2a2a;
+        border-radius: 15px;
+    }
+
+    .search-bar {
+        background-color: white;
+        border-radius: 25px;
+    }
+
+    .btn-search {
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: none;
+    }
+
+    .btn-search:hover {
+        background-color: #333;
+    }
+
+    .book-btn {
+        background-color: black;
+        color: white;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 20px;
+    }
+
+    .book-btn:hover {
+        background-color: #333;
+    }
+</style>

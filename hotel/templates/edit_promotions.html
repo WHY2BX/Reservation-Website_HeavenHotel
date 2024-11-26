@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} Edit Promotions {% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+    <div class="editpromotion-container m-5">
+        <!-- <i class="fa-solid fa-couch"></i>  -->
+        <h1 class="text-center" style="color: white;">Edit Promotion</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <button type="submit" class="btn btn-light" style="color: black;"> Save </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

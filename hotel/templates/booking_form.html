@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block page_title %} Mainpage {% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+    <div class="bookingform-container m-5">
+        <!-- <i class="fa-solid fa-couch"></i> -->
+        <h1 class="text-center" style="color: white;">Booking</h1>
+        <p style="color: white;"><strong>Name:</strong> {{ room.name }}</p>
+        <p style="color: white;"><strong>Type:</strong> {{ room.room_types.all|join:" / " }}</p>
+        <p style="color: white;"><strong>Price:</strong> {{ room.price }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ NewBookingForm }}
+            <br>
+            <button type="submit" class="btn btn-light" style="color: black;">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
